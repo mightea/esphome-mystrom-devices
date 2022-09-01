@@ -1,0 +1,115 @@
+# Basic Config
+substitutions:
+  system_name: mystrom-switch
+  friendly_name: Mystrom Switch
+
+esphome:
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+preferences:
+  flash_write_interval: 5min
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+i2c:
+  sda: 22
+  scl: 19
+  scan: false
+
+light:
+  - platform: binary
+    name: "${friendly_name} Identify LED"
+    disabled_by_default: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    output: output_mystrom_led_red
+  - platform: binary
+    id: light_mystrom_status
+    restore_mode: RESTORE_DEFAULT_ON
+    output: output_mystrom_led_white
+
+output:
+  - id: output_mystrom_led_red
+    platform: gpio
+    pin: GPIO16
+    inverted: false
+  - id: output_mystrom_led_white
+    platform: gpio
+    pin: GPIO17
+    inverted: true
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO23
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    id: button_mystrom_side
+    on_press:
+      then:
+        - switch.toggle: switch_mystrom_relay
+
+sensor:
+  - platform: pulse_counter
+    pin: 4
+    update_interval: 10s
+    id: sensor_mystrom_energy_usage
+    name: "${friendly_name} Power"
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    filters:
+      # Map from sensor -> measured value
+      - calibrate_linear:
+          - 0.0 -> 1.55
+          - 2698.5 -> 85
+          - 4397.25 -> 146
+          - 30900 -> 1005
+          - 44634.56 -> 1439
+          - 59643.75 -> 1930
+      # Make everything below 1W appear as just 0W.
+      # Furthermore it corrects 1.55W for the power usage of the plug.
+      - lambda: if (x < (1 + 1.55)) return 0; else return (x - 1.55);
+
+  - platform: total_daily_energy
+    name: "${friendly_name} Total Daily Energy"
+    power_id: sensor_mystrom_energy_usage
+    filters:
+      # Multiplication factor from W to kW is 0.001
+      - multiply: 0.001
+    unit_of_measurement: kWh
+    accuracy_decimals: 1
+
+  - platform: tmp102
+    id: sensor_mystrom_temperature
+    name: "${friendly_name} Internal Temperature"
+    update_interval: 60s
+    address: 0x48
+    on_value_range:
+      above: 80
+      then:
+        - switch.turn_off: switch_mystrom_relay
+
+switch:
+  - platform: gpio
+    name: "${friendly_name} Relay"
+    pin: GPIO27
+    id: switch_mystrom_relay
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+      - output.turn_on: output_mystrom_led_white
+    on_turn_off:
+      - output.turn_off: output_mystrom_led_white

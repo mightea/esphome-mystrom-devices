@@ -1,0 +1,14 @@
+printWidth: 120
+tabWidth: 2
+useTabs: false
+semi: false
+quotes: false
+quoteProps: "consistent"
+bracketSpacing: true
+endofline: lf
+
+overrides:
+  - files: "*.yaml"
+  - files: "*.yml"
+    options:
+      tabWidth: 4

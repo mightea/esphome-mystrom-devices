@@ -8,6 +8,9 @@ esphome:
   board: esp32doit-devkit-v1
   name: "${system_name}"
 
+time:
+  - platform: sntp
+
 preferences:
   flash_write_interval: 5min
 

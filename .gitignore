@@ -20,7 +20,6 @@ known_devices.yaml
 phue.conf
 plex.conf
 pyozw.sqlite
-secrets.yaml
 tradfri.conf
 
 # Temporary files
@@ -106,7 +105,6 @@ $RECYCLE.BIN/
 
 /custom_components/*
 !/boards/.esphome.yaml
-!components/common/secrets.yaml
 
 *.code-workspace
 

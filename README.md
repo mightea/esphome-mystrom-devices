@@ -25,10 +25,10 @@ Open issues:
 ```txt
       JP1
 GND   [] ()   TXD
-GND   [] ()   RXD
-GND   [] ()   GPIO0
-GND   [] ()
-GND   [] ()
+GND   () ()   RXD
+GND   () ()   GPIO0
+GND   () ()
+GND   () ()
 VCC   () ()
 VCC   () ()
       () ()

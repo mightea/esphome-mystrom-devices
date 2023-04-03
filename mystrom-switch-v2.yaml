@@ -66,6 +66,17 @@ binary_sensor:
     on_press:
       then:
         - switch.toggle: switch_mystrom_relay
+  - platform: gpio
+    pin:
+      number: GPIO18
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    id: button_mystrom_bottom
+    on_press:
+      then:
+        - switch.toggle: switch_mystrom_relay
 
 sensor:
   - platform: pulse_counter

@@ -11,24 +11,20 @@ ESPHome support for the MyStrom V2 Wifi Switch. Currently the following features
 
 - Control the relay
 - Control the red and white LED
-- Side button
+- Side and bottom buttons (same function)
 - Energy monitoring and reporting (room for improvement)
 - Reading the internal temperature sensor
 - Emergency power off if the internal temperature is to high
-
-Open issues:
-
-- The bottom power switch currently does not work
 
 ### WiFi Switch Pinout
 
 ```txt
       JP1
 GND   [] ()   TXD
-GND   [] ()   RXD
-GND   [] ()   GPIO0
-GND   [] ()
-GND   [] ()
+GND   () ()   RXD
+GND   () ()   GPIO0
+GND   () ()
+GND   () ()
 VCC   () ()
 VCC   () ()
       () ()

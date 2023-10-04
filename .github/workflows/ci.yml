@@ -12,6 +12,7 @@ jobs:
       matrix:
         file:
           - mystrom-switch-v2.yaml
+          - mystrom-switch-eu.yaml
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
